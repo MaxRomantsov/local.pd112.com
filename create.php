@@ -50,15 +50,16 @@ if($_SERVER["REQUEST_METHOD"]=="POST") {
 
     <h1 class="text-center">Додати категорію</h1>
 
-    <form class="col-md-6 offset-md-3" method="post">
+    <form class="col-md-6 offset-md-3" method="post" enctype="multipart/form-data" id="categoryForm">
         <div class="mb-3">
             <label for="name" class="form-label">Назва</label>
-            <input type="text" class="form-control" name="name" id="name" >
+            <input type="text" class="form-control" name="name" id="name">
         </div>
 
         <div class="mb-3">
             <label for="image" class="form-label">Фото</label>
-            <input type="file" class="form-control" name="image" id="image" >
+            <input type="file" class="form-control" name="image" id="image" onchange="previewImage()">
+            <img id="imagePreview" src="#" alt="Обране фото" width="150" style="display: none;">
         </div>
 
         <div class="mb-3">
@@ -66,23 +67,47 @@ if($_SERVER["REQUEST_METHOD"]=="POST") {
             <textarea class="form-control" placeholder="Вкажіть опис" name="description" id="description"></textarea>
         </div>
 
-            <!--       <div class="row">-->
-            <!--            <div class="col-md-3">-->
-            <!--                <img src="https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"-->
-            <!--                     alt="Обране фото" width="150">-->
-            <!--            </div>-->
-            <!--            <div class="col-md-9">-->
-            <!--                <div class="mb-3">-->
-            <!--                    <label for="image" class="form-label">Оберіть фото</label>-->
-            <!--                    <input class="form-control" type="file" id="image" name="image" accept="image/*">-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--        </div>-->
-
-        <button type="submit" class="btn btn-primary">Додати</button>
+        <button type="submit" class="btn btn-primary" onclick="return validateForm()">Додати</button>
     </form>
 
 </div>
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+    function previewImage() {
+        var input = document.getElementById('image');
+        var preview = document.getElementById('imagePreview');
+        var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+
+    function validateForm() {
+        var name = document.getElementById('name').value;
+        var image = document.getElementById('image').value;
+
+        if (name.trim() === '') {
+            alert('Будь ласка введіть назву');
+            return false;
+        }
+
+        if (image.trim() === '') {
+            alert('Будь ласка виберіть фото');
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>
